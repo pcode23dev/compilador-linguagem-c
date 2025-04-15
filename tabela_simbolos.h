@@ -10,7 +10,7 @@ typedef struct {
 
 
 void inicializar_tabela();
-void gravar_token_lexema(int token, const char* lexema, int linha, int coluna);
+void gravar_token_lexema(int tok, const char* lex, int lin, int col);
 void imprimir_tabela_simbolos();
 void liberar_tabela();
 
