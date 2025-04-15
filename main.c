@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "tabela_simbolos.h"
+#include "tabela_simbolos.c"
 
 int main(){
     inicializar_tabela();

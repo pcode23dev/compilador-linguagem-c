@@ -7,7 +7,7 @@
 
 EntradaTabela* tabela = NULL;
 int capacidade = 0;
-int index = 0;
+int pos = 0;
 
 void inicializar_tabela() {
     capacidade = TAM_INICIAL;
@@ -19,9 +19,9 @@ void inicializar_tabela() {
     }
 }
 
-void gravar_token_lexema(int tok, char* lex, int lin, int col) {
+void gravar_token_lexema(int tok, const char* lex, int lin, int col) {
     // Aumenta a capacidade da tabela se necessário
-    if (index >= capacidade) {
+    if (pos >= capacidade) {
         capacidade *= 2;
         tabela = (EntradaTabela *) realloc(tabela, capacidade * sizeof(EntradaTabela));
         if (!tabela) {
@@ -30,17 +30,18 @@ void gravar_token_lexema(int tok, char* lex, int lin, int col) {
         }
     }
 
-    tabela[index].token = tok;
-    tabela[index].lexema = strdup(lex);  // Aloca e copia
-    tabela[index].linha = lin;
-    tabela[index].coluna = col;
-    index++;
+    tabela[pos].token = tok;
+    tabela[pos].lexema = strdup(lex);  // Aloca e copia
+    tabela[pos].linha = lin;
+    tabela[pos].coluna = col;
+    pos++;
 }
 
 void imprimir_tabela_simbolos() {
     printf("\nTABELA DE SÍMBOLOS:\n");
     printf("------------------------------\n");
-    for (int i = 0; i < index; i++) {
+    int i;
+    for (i = 0; i < pos; i++) {
         printf("Token: %d\tLexema: %-10s\tLinha: %d\tColuna: %d\n",
                tabela[i].token,
                tabela[i].lexema,
@@ -51,7 +52,8 @@ void imprimir_tabela_simbolos() {
 }
 
 void liberar_tabela() {
-    for (int i = 0; i < index; i++) {
+     int i;
+    for (i = 0; i < pos; i++) {
         free(tabela[i].lexema);
     }
     free(tabela);
