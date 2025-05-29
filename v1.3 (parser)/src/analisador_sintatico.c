@@ -547,7 +547,11 @@ void unario()
     }
     else
     {
-        printf("Erro sintático em unario, token %d (%s) inesperado\n", t, token_atual ? token_atual->lexema : "NULL");
+        printf("%s:%d:%d: Erro sintático em unario, token %d (%s) inesperado\n",
+               nome_arquivo,
+               token_atual ? token_atual->linha : -1,
+               token_atual ? token_atual->coluna : -1,t,
+               token_atual ? token_atual->lexema : "NULL");
         exit(1);
     }
 }
