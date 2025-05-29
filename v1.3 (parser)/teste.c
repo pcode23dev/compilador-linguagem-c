@@ -1,28 +1,14 @@
-#include <stdio.h>
-
-int soma(int a, int b) {
-    int resultado = a + b;
-    return resultado;
+int max(int x, int y) {
+    float a = 1.5, b = 2.5, c;
+    if (x > y) {
+        return x;
+    } else {
+        return y;
+    }
 }
 
 int main() {
-    int x = 10, y = 20, z;
-    float media;
-    char letra = 'A';
-
-    z = soma(x, y);
-
-    if (z > 20) {
-        printf("z é maior que 20\n");
-    } else {
-        printf("z não é maior que 20\n");
-    }
-
-    media = (x + y + z) / 3.0;
-
-    while (media > 10.0) {
-        media = media - 1.0;
-    }
-
+    int result = max(10, 20) + 5 * 2;
+    printf("Resultado: %d\n", result);
     return 0;
 }

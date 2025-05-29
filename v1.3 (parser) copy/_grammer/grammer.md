@@ -46,19 +46,9 @@ ___
 ## Blocos e Comandos
 
 ```c
-<bloco> ::= '{' <lista_de_declaracoes_e_comandos> '}'
+<bloco> ::= '{' <lista_de_comandos> '}'
 
-<lista_de_declaracoes_e_comandos> ::= <declaracao_local> <lista_de_declaracoes_e_comandos>
-                                   | <comando> <lista_de_declaracoes_e_comandos>
-                                   | ε
-
-<declaracao_local> ::= <declaracao_de_variavel>
-
-
-<inicializacao> ::= '=' <expressao> | ε
-
-<lista_de_identificadores> ::= <identificador>
-                            | <identificador> ',' <lista_de_identificadores>
+<lista_de_comandos> ::= <comando> <lista_de_comandos> | ε
 
 <comando> ::= <comando-expressao>
             | <comando-composto>
@@ -69,7 +59,6 @@ ___
             | <comando-break>
             | <comando-continue>
             | <comando-preprocessador>
-
 
 <comando_preprocessador> ::= '#' <identificador> <resto_linha>
 
