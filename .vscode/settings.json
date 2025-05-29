@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "*.dbclient-js": "javascript",
+        "*.sqlbook": "sql",
+        "*.ndjson": "jsonl",
+        "stdio.h": "c",
+        "tabela_simbolos.h": "c",
+        "tokens_completo.h": "c",
+        "leitor_caractere.h": "c",
+        "stdlib.h": "c",
+        "tokens.h": "c",
+        "cstdlib": "c",
+        "analisador_lexico.h": "c",
+        "analisador_sintatico.h": "c",
+        "ctype.h": "c"
+    }
+}

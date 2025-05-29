@@ -46,6 +46,7 @@
 #define TOKEN_NORETURN         42
 #define TOKEN_STATIC_ASSERT    43
 #define TOKEN_THREAD_LOCAL     44
+#define TOKEN_TYPEOF            45
 
 // ======== IDENTIFICADORES E LITERAIS ========
 #define TOKEN_IDENTIFICADOR       100
@@ -73,7 +74,7 @@
 
 // ======== OPERADORES LÓGICOS ========
 #define TOKEN_OP_AND_LOGICO       220  // &&
-#define TOKEN_OP_OR_LOGICO        221  // ||
+#define TOKEN_OP_OR_LOGICO        221  // ||    
 #define TOKEN_OP_NOT_LOGICO       222  // !
 
 // ======== OPERADORES BIT A BIT ========
@@ -118,12 +119,14 @@
 #define TOKEN_DOIS_PONTOS         278  // :
 #define TOKEN_ASPA_SIMPLES        279  // '
 #define TOKEN_ASPA_DUPLA          280  // "
-#define TOKEN_BARRA_INVERTIDA     281  // \
+#define TOKEN_BARRA_INVERTIDA     281  // 
 
 // ======== OUTROS ========
 #define TOKEN_COMENTARIO          290  // /*...*/ ou //
 #define TOKEN_ESPACO_EM_BRANCO    291  // espaço, tab, \n (geralmente ignorado)
-#define TOKEN_DESCONHECIDO        292  // símbolo inválido
+
+#define TOKEN_PRE_PROCESSADOR     300  // #define, #include, etc.
+#define TOKEN_DESCONHECIDO        666  // caractere inválido 
 #define TOKEN_EOF                 999  // fim de arquivo
 
 #endif
