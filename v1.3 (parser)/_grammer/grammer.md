@@ -12,13 +12,15 @@
               | <declaracao_de_tipo>
 
 // Declaração de variável
-<declaracao_de_variavel> ::= <tipo> <lista_de_identificadores> [<inicializacao>] ';'
+<declaracao_de_variavel> ::= <tipo> <lista_de_identificadores_com_vetores> [<inicializacao>] ';'
 
-<inicializacao> ::= '=' <expressao>
-                 | ε
+<inicializacao> ::= '=' <expressao> | ε
 
-<lista_de_identificadores> ::= <identificador>
-                            | <identificador> ',' <lista_de_identificadores>
+// Lista de identificadores com possibilidade de vetores
+<lista_de_identificadores_com_vetores> ::= <identificador> [ <vetor>]
+                                        | <identificador> [ <vetor>] ',' <lista_de_identificadores_com_vetores>
+
+<vetor> ::= '[' [<expressao_ou_vazio>] ']' | ε
 
 // Declaração de função
 <declaracao_de_funcao> ::= <tipo> <identificador> '(' <parametros> ')' <bloco>
@@ -30,12 +32,12 @@
 <parametros> ::= <lista_de_parametros>
               | ε
 
+// Lista de parâmetros com vetores e ponteiros
 <lista_de_parametros> ::= <parametro>
                       | <parametro> ',' <lista_de_parametros>
 
-<parametro> ::= <tipo> <identificador>
+<parametro> ::= <tipo> <identificador> [ <vetor>]
              | <tipo> '*' <identificador>
-             | <tipo> <identificador> '[' ']'
 
 // Tipos de dados
 <tipo> ::= 'int'
@@ -79,17 +81,17 @@
 
 <comando_while> ::= 'while' '(' <expressao> ')' <comando>
 
-<comando_for> ::= 'for' '(' <expressao_opcional> ';' <expressao_opcional> ';' <expressao_opcional> ')' <comando>
+<comando_for> ::= 'for' '(' [<expressao_ou_vazio>] ';' [<expressao_ou_vazio>] ';' [<expressao_ou_vazio>] ')' <comando>
 
 // Comandos de fluxo
-<comando_return> ::= 'return' <expressao_opcional> ';'
+<comando_return> ::= 'return' [<expressao_ou_vazio>] ';'
 
 <comando_break> ::= 'break' ';'
 
 <comando_continue> ::= 'continue' ';'
 
 // Expressões
-<expressao_opcional> ::= <expressao>
+<expressao_ou_vazio> ::= <expressao>
                       | ε
 
 <expressao> ::= <expressao_atribuicao>

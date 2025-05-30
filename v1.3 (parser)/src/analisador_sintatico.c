@@ -40,7 +40,6 @@ void casa_token(int esperado) {
 }
 
 
-
 // ------------------ análise sintática  ----------------------
 
 void programa()
@@ -118,6 +117,24 @@ void declaracao_de_tipo()
     casa_token(TOKEN_PONTO_VIRGULA);
 }
 
+// -- NOVO: Parse vetor opcional (para declarações e parâmetros)
+// vetor ::= '[' [expressao_ou_vazio] ']'
+// expressao_ou_vazio ::= expressao | ε
+
+void vetor()
+{
+    if (token_atual_token() == TOKEN_ABRE_COLCHETES)
+    {
+        casa_token(TOKEN_ABRE_COLCHETES);
+        // expressao_ou_vazio
+        if (token_atual_token() != TOKEN_FECHA_COLCHETES)
+        {
+            expressao();
+        }
+        casa_token(TOKEN_FECHA_COLCHETES);
+    }
+}
+
 void declaracao_de_variavel()
 {
     tipo();
@@ -125,21 +142,24 @@ void declaracao_de_variavel()
     casa_token(TOKEN_PONTO_VIRGULA);
 }
 
+// -- Lista de identificadores com vetor e inicialização opcional
+// <lista_de_identificadores_com_vetores> ::= <identificador> [<vetor>] [<inicializacao>] (',' ...)*
+
 void lista_de_identificadores_com_inicializacao()
 {
-    identificador_com_inicializacao();
+    identificador_com_vetor_e_inicializacao();
 
     while (token_atual_token() == TOKEN_VIRGULA)
     {
         casa_token(TOKEN_VIRGULA);
-        identificador_com_inicializacao();
+        identificador_com_vetor_e_inicializacao();
     }
 }
 
-void identificador_com_inicializacao()
+void identificador_com_vetor_e_inicializacao()
 {
-    printf("Antes de casar IDENTIFICADOR 2: token atual = %d (%s)\n", token_atual_token(), token_atual ? token_atual->lexema : "NULL");
     casa_token(TOKEN_IDENTIFICADOR);
+    vetor();
 
     if (token_atual_token() == TOKEN_ATRIBUICAO)
     {
@@ -151,22 +171,11 @@ void identificador_com_inicializacao()
 void declaracao_de_funcao()
 {
     tipo();
-
-    printf("DEBUG declaracao_de_funcao: token atual antes de IDENTIFICADOR = %d (%s)\n",
-           token_atual_token(), token_atual ? token_atual->lexema : "NULL");
-
     casa_token(TOKEN_IDENTIFICADOR);
-
-    printf("DEBUG declaracao_de_funcao: token atual antes de ABRE_PARENTESES = %d (%s)\n",
-           token_atual_token(), token_atual ? token_atual->lexema : "NULL");
-
     casa_token(TOKEN_ABRE_PARENTESES);
-
     parametros();
-
     casa_token(TOKEN_FECHA_PARENTESES);
-
-    bloco();
+    bloco(); // chama lista_de_declaracoes_e_comandos internamente
 }
 
 void parametros()
@@ -191,20 +200,21 @@ void lista_de_parametros()
     }
 }
 
+// -- Parâmetro atualizado com suporte a vetor (array) e ponteiro
+
 void parametro()
 {
     tipo();
+
     if (token_atual_token() == TOKEN_OP_MUL)
     {
         casa_token(TOKEN_OP_MUL);
     }
-    printf("Antes de casar IDENTIFICADOR 4: token atual = %d (%s)\n", token_atual_token(), token_atual ? token_atual->lexema : "NULL");
+
     casa_token(TOKEN_IDENTIFICADOR);
-    if (token_atual_token() == TOKEN_ABRE_COLCHETES)
-    {
-        casa_token(TOKEN_ABRE_COLCHETES);
-        casa_token(TOKEN_FECHA_COLCHETES);
-    }
+
+    vetor(); // Suporte a parâmetro como vetor
+
 }
 
 void tipo()
@@ -246,11 +256,43 @@ void lista_de_identificadores()
     }
 }
 
+// -- Bloco de comandos e declarações locais, já estava ok
+
 void bloco()
 {
     casa_token(TOKEN_ABRE_CHAVES);
-    lista_de_comandos();
+    lista_de_declaracoes_e_comandos();
     casa_token(TOKEN_FECHA_CHAVES);
+}
+
+void lista_de_declaracoes_e_comandos()
+{
+    int t = token_atual_token();
+
+    while (t == TOKEN_INT || t == TOKEN_FLOAT || t == TOKEN_CHAR || t == TOKEN_VOID ||
+           t == TOKEN_IDENTIFICADOR || t == TOKEN_PONTO_VIRGULA || t == TOKEN_IF ||
+           t == TOKEN_WHILE || t == TOKEN_FOR || t == TOKEN_RETURN || t == TOKEN_BREAK ||
+           t == TOKEN_CONTINUE || t == TOKEN_ABRE_CHAVES)
+    {
+        if (t == TOKEN_INT || t == TOKEN_FLOAT || t == TOKEN_CHAR || t == TOKEN_VOID || t == TOKEN_IDENTIFICADOR)
+        {
+            // Verifica se é declaração local ou comando
+            EntradaTabela *lookahead = token_atual->prox;
+            if (lookahead != NULL && (lookahead->token == TOKEN_IDENTIFICADOR || lookahead->token == TOKEN_OP_MUL))
+            {
+                declaracao_de_variavel();
+            }
+            else
+            {
+                comando();
+            }
+        }
+        else
+        {
+            comando();
+        }
+        t = token_atual_token();
+    }
 }
 
 void lista_de_comandos()
@@ -287,7 +329,6 @@ void lista_de_comandos()
         t = token_atual_token();
     }
 }
-
 
 void comando()
 {
@@ -414,7 +455,8 @@ void expressao_atribuicao()
 
     if (token_atual_token() == TOKEN_IDENTIFICADOR)
     {
-        EntradaTabela *lookahead = token_atual->prox;
+        EntradaTabela *lookahead = token_atual->prox; // Verifica o próximo token após o identificador
+
         if (lookahead != NULL && lookahead->token == TOKEN_ATRIBUICAO)
         {
     printf("Antes de casar IDENTIFICADOR 8: token atual = %d (%s)\n", token_atual_token(), token_atual ? token_atual->lexema : "NULL");

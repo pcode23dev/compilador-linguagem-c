@@ -30,7 +30,9 @@ int max(int x, int y) {
         return y;
     }
 }
+
 void loop_example() {
+    float a = 1.5, b = 2.5, c;
     int i = 0;
     for ( i = 0; i < 10; i++) {
         printf("i = %d\n", i);
@@ -42,8 +44,7 @@ void loop_example() {
     }
 }
 
-
-int main() {
+int main(int argc, char *argv[]) {
     int result = max(10, 20) + 5 * 2;
     printf("Resultado: %d\n", result);
     return 0;
