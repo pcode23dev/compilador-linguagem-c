@@ -23,8 +23,8 @@ int main(int argc, char *argv[]) {
     // Executa análise léxica para preencher a tabela
     while (analex() != TOKEN_EOF);
 
-    // Imprime a tabela de símbolos
-    imprimir_tabela_simbolos();
+    // // Imprime a tabela de símbolos
+    // imprimir_tabela_simbolos();
 
     // Inicializa o ponteiro do parser para o começo da tabela
     token_atual = tabelaSimbolos;

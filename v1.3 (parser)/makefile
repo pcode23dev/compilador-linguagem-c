@@ -1,24 +1,34 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g -I./bin
-OBJDIR = src
+OBJDIR = obj
 BINDIR = bin
-EXEC = compilador
+EXEC = $(BINDIR)/compilador
 
 SRCS = main.c \
        src/analisador_lexico.c \
        src/analisador_sintatico.c
 
+# Gerar caminhos para os .o dentro de obj/
 OBJS = $(SRCS:.c=.o)
+OBJS := $(patsubst %,$(OBJDIR)/%,$(OBJS))
+
+# Substituir .c por .o, e adicionar pasta obj/
+DEPS = $(OBJS:.o=.d)
 
 .PHONY: all clean
 
 all: $(EXEC)
 
 $(EXEC): $(OBJS)
+	@mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS) -o $@ $^
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Regra para compilar .c em .o, salvando os .o em obj/
+$(OBJDIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
+
+-include $(DEPS)
 
 clean:
-	rm -f $(OBJDIR)/*.o $(EXEC)
+	rm -rf $(OBJDIR) $(BINDIR)/compilador
